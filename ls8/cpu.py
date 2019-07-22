@@ -76,7 +76,15 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        pass
+        # IR = _Instruction Register_
+        IR = self.ram_read(self.pc)
+        
+        return IR
+        
+        
+        
+        
+        
     
 cpu = CPU()
 print(f'RAM (BEFORE write):\n {cpu.ram} \n')
@@ -87,3 +95,5 @@ cpu.ram_write(200, 5)
 print(f'RAM (AFTER write):\n {cpu.ram} \n')
 print(f'REGISTER (AFTER write):\n {cpu.reg} \n')
 print(f'Value at MAR 5 (AFTER write):\n {cpu.ram_read(5)} \n')  # Should return '200'
+
+print(f'run() returns:\n {cpu.run()} \n')
