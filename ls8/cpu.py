@@ -79,6 +79,10 @@ class CPU:
 cpu = CPU()
 print(f'RAM (BEFORE write):\n {cpu.ram} \n')
 print(f'REGISTER (before write):\n {cpu.reg} \n')
+
 cpu.ram_write(200, 5)
 print(f'RAM (AFTER write):\n {cpu.ram} \n')
 print(f'REGISTER (AFTER write):\n {cpu.reg} \n')
+
+print(f'Value at Index 4:\n {cpu.ram_read(4)} \n')  # Should return None
+print(f'Value at Index 5:\n {cpu.ram_read(5)} \n')  # Should return '200'
