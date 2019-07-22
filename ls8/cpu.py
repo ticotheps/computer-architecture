@@ -15,11 +15,13 @@ class CPU:
     def __str__(self):
         return f"RAM: {self.ram}, REGISTER: {self.reg}, PC: {self.pc}"
     
-    def ram_read(self, address):
-        return self.ram[address]
+    # MAR = _Memory Address Register_
+    def ram_read(self, MAR):
+        return self.ram[MAR]
     
-    def ram_write(self, value, address):
-        self.ram[address] = value
+    # MDR = _Memory Data Register_
+    def ram_write(self, MDR, MAR):
+        self.ram[MAR] = MDR
 
     def load(self):
         """Load a program into memory."""
@@ -78,11 +80,10 @@ class CPU:
     
 cpu = CPU()
 print(f'RAM (BEFORE write):\n {cpu.ram} \n')
-print(f'REGISTER (before write):\n {cpu.reg} \n')
+print(f'REGISTER (BEFORE write):\n {cpu.reg} \n')
+print(f'Value at MAR 5 (BEFORE write):\n {cpu.ram_read(5)} \n')  # Should return None
 
 cpu.ram_write(200, 5)
 print(f'RAM (AFTER write):\n {cpu.ram} \n')
 print(f'REGISTER (AFTER write):\n {cpu.reg} \n')
-
-print(f'Value at Index 4:\n {cpu.ram_read(4)} \n')  # Should return None
-print(f'Value at Index 5:\n {cpu.ram_read(5)} \n')  # Should return '200'
+print(f'Value at MAR 5 (AFTER write):\n {cpu.ram_read(5)} \n')  # Should return '200'
