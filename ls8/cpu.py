@@ -77,8 +77,8 @@ class CPU:
         pass
     
 cpu = CPU()
-print(f'RAM (before): {cpu.ram}')
-print(f'REGISTER (before): {cpu.reg} \n')
+print(f'RAM (BEFORE write):\n {cpu.ram} \n')
+print(f'REGISTER (before write):\n {cpu.reg} \n')
 cpu.ram_write(200, 5)
-print(f'RAM (after write): {cpu.ram}')
-print(f'REGISTER (after write): {cpu.reg} \n')
+print(f'RAM (AFTER write):\n {cpu.ram} \n')
+print(f'REGISTER (AFTER write):\n {cpu.reg} \n')
