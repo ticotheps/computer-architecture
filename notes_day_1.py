@@ -67,4 +67,31 @@ print(y)
 # 0b10000 + 0b1 = 0b10001
 
 
+# 0b1111 == 15
+# 1 + 2 + 4 + 8 == 15
+
+# 0xF == 15
+
+# EVERY 4 bits ("nibble") represent ONE hexadecimal number
+# 0b 1010 0100
+# 0x   A    4
+
+# 0b10100100 == 0xA4
+
+# 0x    C    8
+# 0b 1100 1000
+
+# 0xC8 == 0b11001000
+
+# 0b11111111 => always a power of 2 minus 1
+
+# 0b 1111 1111 == 255 (256 = power of 2; minus 1 = 255) 
+# 0x   F    F  => Largest Character in hexadecimal
+
+
+
+
+0b10100100
+
+
 
