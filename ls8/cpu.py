@@ -15,18 +15,18 @@ class CPU:
     def __str__(self):
         return f"RAM: {self.ram}, REGISTER: {self.reg}, PC: {self.pc}"
     
-    # MAR = _Memory Address Register_
+    # MAR = address; _Memory Address Register_
     def ram_read(self, MAR):
         return self.ram[MAR]
     
-    # MDR = _Memory Data Register_
+    # MDR = value; _Memory Data Register_
     def ram_write(self, MDR, MAR):
         self.ram[MAR] = MDR
 
     def load(self):
         """Load a program into memory."""
 
-        address = 0
+        MAR = 0  # Address
 
         # For now, we've just hardcoded a program:
 
@@ -41,8 +41,8 @@ class CPU:
         ]
 
         for instruction in program:
-            self.ram[address] = instruction
-            address += 1
+            self.ram[MAR] = instruction
+            MAR += 1
 
 
     def alu(self, op, reg_a, reg_b):
@@ -76,8 +76,22 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
+        # determines whether or not this function is "running"
+        running = True
+        
         # IR = _Instruction Register_
         IR = self.ram_read(self.pc)
+        
+        operand_a = self.ram_read(self.pc + 1)
+        operand_b = self.ram_read(self.pc + 2)
+        
+        while (running):
+            command = self.ram[self.pc]
+            
+            if command == : 
+                print ("Jake, what do software developers do?")
+            else:
+                pass
         
         return IR
         
