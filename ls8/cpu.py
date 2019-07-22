@@ -10,8 +10,16 @@ class CPU:
         """Construct a new CPU."""
         self.ram = [None] * 256
         self.reg = [0] * 8
+        self.pc = 0
+        
     def __str__(self):
-        return f"RAM: {self.ram}, REGISTER: {self.reg}"
+        return f"RAM: {self.ram}, REGISTER: {self.reg}, PC: {self.pc}"
+    
+    def ram_read(self, address):
+        return self.ram[address]
+    
+    def ram_write(self, value, address):
+        self.ram[address] = value
 
     def load(self):
         """Load a program into memory."""
@@ -69,4 +77,8 @@ class CPU:
         pass
     
 cpu = CPU()
-print(cpu.ram, cpu.reg)
+print(f'RAM (before): {cpu.ram}')
+print(f'REGISTER (before): {cpu.reg} \n')
+cpu.ram_write(200, 5)
+print(f'RAM (after write): {cpu.ram}')
+print(f'REGISTER (after write): {cpu.reg} \n')
