@@ -16,17 +16,17 @@ class CPU:
         return f"RAM: {self.ram}, REGISTER: {self.reg}, PC: {self.pc}"
     
     # MAR = address; _Memory Address Register_
-    def ram_read(self, MAR):
-        return self.ram[MAR]
+    def ram_read(self, address):
+        return self.ram[address]
     
     # MDR = value; _Memory Data Register_
-    def ram_write(self, MDR, MAR):
-        self.ram[MAR] = MDR
+    def ram_write(self, value, address):
+        self.ram[address] = value
 
     def load(self):
         """Load a program into memory."""
 
-        MAR = 0  # Address
+        address = 0  # Address
 
         # For now, we've just hardcoded a program:
 
@@ -41,8 +41,8 @@ class CPU:
         ]
 
         for instruction in program:
-            self.ram[MAR] = instruction
-            MAR += 1
+            self.ram[address] = instruction
+            address += 1
 
 
     def alu(self, op, reg_a, reg_b):
@@ -82,18 +82,19 @@ class CPU:
         # IR = _Instruction Register_
         IR = self.ram_read(self.pc)
         
-        operand_a = self.ram_read(self.pc + 1)
-        operand_b = self.ram_read(self.pc + 2)
+        # operand_a = self.ram_read(self.pc + 1)
+        # operand_b = self.ram_read(self.pc + 2)
         
-        while (running):
-            command = self.ram[self.pc]
+        # while (running):
+        #     command = self.ram[self.pc]
             
-            if command == : 
-                print ("Jake, what do software developers do?")
-            else:
-                pass
+        #     if command == None: 
+        #         print ("Jake, what do software developers do?")
+        #     else:
+        #         pass
+        #     self.pc += 1
         
-        return IR
+        # return IR
         
         
         
@@ -103,11 +104,11 @@ class CPU:
 cpu = CPU()
 print(f'RAM (BEFORE write):\n {cpu.ram} \n')
 print(f'REGISTER (BEFORE write):\n {cpu.reg} \n')
-print(f'Value at MAR 5 (BEFORE write):\n {cpu.ram_read(5)} \n')  # Should return None
+print(f'Value at Address 5 (BEFORE write):\n {cpu.ram_read(5)} \n')  # Should return None
 
 cpu.ram_write(200, 5)
 print(f'RAM (AFTER write):\n {cpu.ram} \n')
 print(f'REGISTER (AFTER write):\n {cpu.reg} \n')
-print(f'Value at MAR 5 (AFTER write):\n {cpu.ram_read(5)} \n')  # Should return '200'
+print(f'Value at Address 5 (AFTER write):\n {cpu.ram_read(5)} \n')  # Should return '200'
 
 print(f'run() returns:\n {cpu.run()} \n')
