@@ -85,5 +85,29 @@ dist_to_move_pc = num_operands + 1
 
 
 
+Setting a bit to '1':
+
+  0001100
+| 1000000   <- use OR mask to turn on/off (using opposites)
+-----------
+x = x | (1 << 6)
+
+
+  00001100
+| 01010100   <- use OR mask to turn on/off (using opposites)
+-----------
+x = x | ( 0b1111000 )
+
+
+-------------------------------------------------------------
+255.255.255.0 subnet mask
+
+11111111.11111111.11111111.00000000
+
+ip_add AND subnet_mask == network_number
+
+192.168.2.4
+255.255.255.0
+192.168.2.0
 
 
