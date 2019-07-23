@@ -3,6 +3,10 @@
 
 import sys
 
+LDI = 0b10000010
+HLT = 0b00000001
+PRN = 0b01000111
+
 class CPU:
     """Main CPU class."""
 
@@ -82,33 +86,24 @@ class CPU:
         # IR = _Instruction Register_
         IR = self.ram_read(self.pc)
         
-        # operand_a = self.ram_read(self.pc + 1)
-        # operand_b = self.ram_read(self.pc + 2)
-        
-        # while (running):
-        #     command = self.ram[self.pc]
+        while (running):
+            command = self.ram[self.pc]
+            num_of_ops = int(IR & 0b110000000 >> 6) + 1
             
-        #     if command == None: 
-        #         print ("Jake, what do software developers do?")
-        #     else:
-        #         pass
-        #     self.pc += 1
-        
-        # return IR
-        
-        
-        
-        
-        
-    
-cpu = CPU()
-print(f'RAM (BEFORE write):\n {cpu.ram} \n')
-print(f'REGISTER (BEFORE write):\n {cpu.reg} \n')
-print(f'Value at Address 5 (BEFORE write):\n {cpu.ram_read(5)} \n')  # Should return None
-
-cpu.ram_write(200, 5)
-print(f'RAM (AFTER write):\n {cpu.ram} \n')
-print(f'REGISTER (AFTER write):\n {cpu.reg} \n')
-print(f'Value at Address 5 (AFTER write):\n {cpu.ram_read(5)} \n')  # Should return '200'
-
-print(f'run() returns:\n {cpu.run()} \n')
+            operand_a = self.ram_read(self.pc + 1)
+            operand_b = self.ram_read(self.pc + 2)
+            
+            if command == HLT: 
+                running = False
+                
+            elif command == LDI:
+                self.reg[operand_a] = operand_b
+                
+            elif command == PRN:
+                print(self.reg[operand_a])
+                
+            else: 
+                print(f"unknown instruction: {command}")
+                sys.exit(1)
+                
+            self.pc += num_of_ops
