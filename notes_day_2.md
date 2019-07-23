@@ -31,9 +31,9 @@ NOT         not        ~  (turns 1s into 0s and 0s into -1)
 -"AND" Masking (similar to spray painting with a stencil, except this uses numbers)
 
   10100101
-& 11110000   <- AND mask
+& 11110000   <- AND mask (0=close, 1=open)
 -----------
-  1010
+  10100000
 
 -The AND mask allows us to SELECT a few bits in a number and ignore the others.
 
@@ -83,14 +83,14 @@ ir = 0b10100000   ADD
 num_operands = (ir & 0b11000000) >> 6 (right shift by 6 places; tells                                          us that the ADD instruction has                                         2 operands )
 dist_to_move_pc = num_operands + 1
 
-
-
 Setting a bit to '1':
 
   0001100
 | 1000000   <- use OR mask to turn on/off (using opposites)
 -----------
+  1000000
 x = x | (1 << 6)
+  0000001
 
 
   00001100
