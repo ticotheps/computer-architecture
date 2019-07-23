@@ -14,6 +14,9 @@ try:
     with open(sys.argv[1]) as f:
         for line in f:
             num = line.split("#", 1)[0]
+            
+            if num.strip() == '':  # ignore comment-only lines
+                continue
             print(int(num))
         
 except FileNotFoundError:
