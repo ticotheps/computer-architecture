@@ -81,6 +81,7 @@ RIGHT shift            >>
 
 ir = 0b10100000   ADD
 num_operands = (ir & 0b11000000) >> 6 (right shift by 6 places; tells                                          us that the ADD instruction has                                         2 operands )
+dist_to_move_pc = num_operands + 1
 
 
 
