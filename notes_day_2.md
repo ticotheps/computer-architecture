@@ -117,3 +117,9 @@ IN LINUX:
 -"1" + "2" are arbitrary
 
 
+-USE 'line.split("#", 1)' to split a string at all "#"
+-USE 'int('1  ')' to only convert the first half of the string
+ to an int; forgets the rest of the line with "#"
+
+
+

@@ -13,7 +13,8 @@ if len(sys.argv) != 2:
 try:
     with open(sys.argv[1]) as f:
         for line in f:
-            print(int(line))
+            num = line.split("#", 1)[0]
+            print(int(num))
         
 except FileNotFoundError:
     print(f"{sys.argv[0]}: {sys.argv[1]} not found")
