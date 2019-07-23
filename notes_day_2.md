@@ -111,3 +111,9 @@ ip_add AND subnet_mask == network_number
 192.168.2.0
 
 
+IN LINUX:
+
+-"0" means success
+-"1" + "2" are arbitrary
+
+
