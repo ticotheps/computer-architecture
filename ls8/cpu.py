@@ -106,9 +106,10 @@ class CPU:
                 print(self.reg[operand_a])
                 
             else: 
+                self.trace()
                 print("Command: ", command)
                 print("LDI: ", LDI)
                 print(f"unknown instruction: {command}")
                 sys.exit(1)
-                
             self.pc += num_of_ops
+            
