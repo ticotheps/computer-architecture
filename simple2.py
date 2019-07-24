@@ -15,7 +15,7 @@ pc = 0 # Program Counter, points to currently-executing instruction
 running = True    
     
 if len(sys.argv) != 2:
-    print(f"Usage: {sys.argv[0]} filename")      
+    print(f"Error: Proper Usage = {sys.argv[0]} filename")
     sys.exit(1)
 try:
     with open(sys.argv[1]) as f:

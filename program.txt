@@ -1,6 +1,3 @@
- # My program
- 1      # PRINT_BEEJ
- 1      # PRINT_BEEJ
 4      # SAVE_REGISTER 77,2
 99     # store 77
 2      # in register 2

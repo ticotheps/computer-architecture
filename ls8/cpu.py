@@ -29,17 +29,28 @@ class CPU:
 
     def load(self):
         """Load a program into memory."""
-
-        address = 0  # Address
-
-        # For now, we've just hardcoded a program:
-
         program = [] * 256
 
-        for instruction in program:
-            self.ram[address] = instruction
-            address += 1
-
+        if len(sys.argv) != 2:
+            print(f"Error: Proper Usage = {sys.argv[0]} filename")
+            sys.exit(1)
+            
+        try:
+            with open(sys.argv[1]) as f:
+                address = 0
+                
+                for instruction in program:
+                    opcode = instruction.split("#", 1)[0]
+                    
+                    if opcode.strip() == '':  # ignores comment-only lines
+                        continue
+                    # print(int(opcode))
+                    self.ram[address] = int(opcode)
+                    address += 1
+                    
+        except FileNotFoundError:
+            print(f"{sys.argv[0]}: {sys.argv[1]} not found")
+            sys.exit(2)
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
@@ -101,3 +112,4 @@ class CPU:
             self.pc += num_of_ops
             
 print(sys.argv)
+print("LDI:", LDI)
