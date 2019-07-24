@@ -3,10 +3,6 @@
 
 import sys
 
-LDI = 0b10000010
-HLT = 0b00000001
-PRN = 0b01000111
-
 class CPU:
     """Main CPU class."""
 
@@ -36,7 +32,7 @@ class CPU:
             sys.exit(1)
             
         try:
-            with open(sys.argv[1]) as f:
+            with open(sys.argv[1]) as program:
                 address = 0
                 
                 for instruction in program:
@@ -83,6 +79,10 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
+        LDI = 0b10000010
+        HLT = 0b00000001
+        PRN = 0b01000111
+        
         # determines whether or not this function is "running"
         running = True
         
@@ -110,6 +110,3 @@ class CPU:
                 sys.exit(1)
                 
             self.pc += num_of_ops
-            
-print(sys.argv)
-print("LDI:", LDI)
