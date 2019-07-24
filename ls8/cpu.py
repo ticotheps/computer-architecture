@@ -1,15 +1,11 @@
 # Place where instructions are processed
 """CPU functionality."""
-
 import sys
-
 LDI = 0b10000010
 HLT = 0b00000001
 PRN = 0b01000111
-
 class CPU:
     """Main CPU class."""
-
     def __init__(self):
         """Construct a new CPU."""
         self.ram = [0] * 256
@@ -26,11 +22,9 @@ class CPU:
     # MDR = value; _Memory Data Register_
     def ram_write(self, value, address):
         self.ram[address] = value
-
     def load(self):
         """Load a program into memory."""
         # program = [0] * 256
-
         if len(sys.argv) != 2:
             print(f"Error: Proper Usage = {sys.argv[0]} filename")
             sys.exit(1)
@@ -40,33 +34,30 @@ class CPU:
                 address = 0
                 
                 for line in program:
-                    opcode = line.split("#", 1)[0]
+                    num = line.split("#", 1)[0]
                     
-                    if opcode.strip() == '':  # ignores comment-only lines
+                    if num.strip() == '':  # ignores comment-only lines
                         continue
-                    # print(int(opcode))
-                    self.ram[address] = int(opcode)
+                    self.ram[address] = int(num, 2)
+                    #print(num)
                     address += 1
+           # print(self.ram)
                     
         except FileNotFoundError:
             print(f"{sys.argv[0]}: {sys.argv[1]} not found")
             sys.exit(2)
-
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
-
         if op == "ADD":
             self.reg[reg_a] += self.reg[reg_b]
         #elif op == "SUB": etc
         else:
             raise Exception("Unsupported ALU operation")
-
     def trace(self):
         """
         Handy function to print out the CPU state. You might want to call this
         from run() if you need help debugging.
         """
-
         print(f"TRACE: %02X | %02X %02X %02X |" % (
             self.pc,
             #self.fl,
@@ -75,15 +66,11 @@ class CPU:
             self.ram_read(self.pc + 1),
             self.ram_read(self.pc + 2)
         ), end='')
-
         for i in range(8):
             print(" %02X" % self.reg[i], end='')
-
         print()
-
     def run(self):
         """Run the CPU."""
-        
         # determines whether or not this function is "running"
         running = True
         
@@ -109,15 +96,7 @@ class CPU:
             else: 
                 # print("Command: ", command)
                 # print("LDI: ", LDI)
-                # print(f"unknown instruction: {command}")
+                print(f"unknown instruction: {command}")
                 sys.exit(1)
             self.pc += num_of_ops
-            
-            
-cpu = CPU()
-print(f'RAM (BEFORE):\n {cpu.ram} \n')
-print(f'REGISTER (BEFORE):\n {cpu.reg} \n')
-
-print(f'RAM (AFTER):\n {cpu.ram} \n')
-print(f'REGISTER (AFTER):\n {cpu.reg} \n')
-            
+    #print(self.ram)
