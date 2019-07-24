@@ -75,35 +75,36 @@ class CPU:
         running = True
         
         # IR = _Instruction Register_
-        IR = self.ram_read(self.pc)
+        
         
         while (running):
+            IR = self.ram_read(self.pc)
+            
             command = self.ram[self.pc]
             
-            # num_of_ops = int(IR & 0b110000000 >> 6) + 1
+            num_of_ops = int((IR >> 6) & 0b11) + 1
             
             operand_a = self.ram_read(self.pc + 1)
             operand_b = self.ram_read(self.pc + 2)
                 
             # LDI = 0b10000010
             if command == LDI:
-                print('LDI')
+                # print('LDI', num_of_ops)
                 self.reg[operand_a] = operand_b
-                self.pc += 3
-                
+            
             # PRN = 0b01000111
             elif command == PRN:
-                print('PRN')    
+                # print('PRN', num_of_ops)    
                 print(self.reg[operand_a])
-                self.pc += 2
-
+               
             # HLT = 0b00000001
             elif command == HLT: 
-                print('HLT')
+                # print('HLT', num_of_ops)
                 running = False
                 
             else: 
-                print('else')
                 print(f"unknown instruction: {command}")
                 sys.exit(1)
+            
+            self.pc += num_of_ops
     
