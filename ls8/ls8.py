@@ -17,3 +17,6 @@ print(f'REGISTER (BEFORE):\n {cpu.reg} \n')
 
 print(f'RAM (AFTER):\n {cpu.ram} \n')
 print(f'REGISTER (AFTER):\n {cpu.reg} \n')
+
+# print(sys.argv[0])
+# print(sys.argv[1])
