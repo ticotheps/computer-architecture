@@ -106,6 +106,8 @@ class CPU:
                 print(self.reg[operand_a])
                 
             else: 
+                print("Command: ", command)
+                print("LDI: ", LDI)
                 print(f"unknown instruction: {command}")
                 sys.exit(1)
                 
