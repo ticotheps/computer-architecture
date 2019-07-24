@@ -1,9 +1,11 @@
-# Place where instructions are processed
+ # Place where instructions are processed
 """CPU functionality."""
 import sys
 LDI = 0b10000010
 HLT = 0b00000001
 PRN = 0b01000111
+MUL = 0b10100010
+
 class CPU:
     """Main CPU class."""
     def __init__(self):
@@ -101,10 +103,13 @@ class CPU:
             elif command == HLT: 
                 # print('HLT', num_of_ops)
                 running = False
-                
+
+            elif command == MUL:
+                # print("MUL")
+                self.reg[operand_a] = self.reg[operand_a] * self.reg[operand_b]
+
             else: 
                 print(f"unknown instruction: {command}")
                 sys.exit(1)
             
             self.pc += num_of_ops
-    
