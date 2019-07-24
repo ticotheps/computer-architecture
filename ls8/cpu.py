@@ -3,6 +3,10 @@
 
 import sys
 
+LDI = 0b10000010
+HLT = 0b00000001
+PRN = 0b01000111
+
 class CPU:
     """Main CPU class."""
 
@@ -25,18 +29,18 @@ class CPU:
 
     def load(self):
         """Load a program into memory."""
-        program = [] * 256
+        # program = [0] * 256
 
         if len(sys.argv) != 2:
             print(f"Error: Proper Usage = {sys.argv[0]} filename")
             sys.exit(1)
-            
+         
         try:
             with open(sys.argv[1]) as program:
                 address = 0
                 
-                for instruction in program:
-                    opcode = instruction.split("#", 1)[0]
+                for line in program:
+                    opcode = line.split("#", 1)[0]
                     
                     if opcode.strip() == '':  # ignores comment-only lines
                         continue
@@ -79,9 +83,6 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        LDI = 0b10000010
-        HLT = 0b00000001
-        PRN = 0b01000111
         
         # determines whether or not this function is "running"
         running = True
@@ -106,10 +107,17 @@ class CPU:
                 print(self.reg[operand_a])
                 
             else: 
-                self.trace()
-                print("Command: ", command)
-                print("LDI: ", LDI)
-                print(f"unknown instruction: {command}")
+                # print("Command: ", command)
+                # print("LDI: ", LDI)
+                # print(f"unknown instruction: {command}")
                 sys.exit(1)
             self.pc += num_of_ops
+            
+            
+cpu = CPU()
+print(f'RAM (BEFORE):\n {cpu.ram} \n')
+print(f'REGISTER (BEFORE):\n {cpu.reg} \n')
+
+print(f'RAM (AFTER):\n {cpu.ram} \n')
+print(f'REGISTER (AFTER):\n {cpu.reg} \n')
             
