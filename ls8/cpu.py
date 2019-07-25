@@ -3,8 +3,8 @@
 import sys
 
 LDI = 0b10000010
-HLT = 0b00000001
 PRN = 0b01000111
+HLT = 0b00000001
 MUL = 0b10100010
 PUSH = 0b01000101
 POP = 0b01000110
@@ -17,6 +17,13 @@ class CPU:
         self.reg = [0] * 8
         self.pc = 0
         self.SP = 7
+        self.branch_table = {}
+        self.branch_table[LDI] = self.handle_LDI
+        self.branch_table[PRN] = self.handle_PRN
+        self.branch_table[HLT] = self.handle_HLT
+        self.branch_table[MUL] = self.handle_MUL
+        self.branch_table[PUSH] = self.handle_PUSH
+        self.branch_table[POP] = self.handle_POP
         
     def __str__(self):
         return f"RAM: {self.ram}, REGISTER: {self.reg}, PC: {self.pc}"
@@ -72,6 +79,24 @@ class CPU:
         ), end='')
         for i in range(8):
             print(" %02X" % self.reg[i], end='')
+            
+    def handle_LDI(self, operand_a, operand_b):
+        pass
+
+    def handle_PRN(self, operand_a):
+        pass
+      
+    def handle_HLT(self):
+        pass
+
+    def handle_MUL(self, operand_a, operand_b):
+        pass
+    
+    def handle_PUSH(self, operand_a):
+        pass
+
+    def handle_POP(self, operand_a):
+        pass
             
     def run(self):
         """Run the CPU."""
