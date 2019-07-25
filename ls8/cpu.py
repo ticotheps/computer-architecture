@@ -166,9 +166,9 @@ class CPU:
                 
                 # set the PC to the subroutine addr
                 self.pc = self.reg[operand_a] - num_of_ops
-                # regnum = self.ram[self.pc + 1] 
-                # subroutine_addr = self.reg[regnum] 
-                # self.pc = subroutine_addr
+                    # regnum = self.ram[self.pc + 1] 
+                    # subroutine_addr = self.reg[regnum] 
+                    # self.pc = subroutine_addr
                 
             elif command == RET:
                 # pop the return address off the stack
