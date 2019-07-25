@@ -7,3 +7,11 @@
 # Subroutines
 
 - Lightweight functions
+
+# Stack
+
+- Great place to store local variables
+
+# Stack Frames
+
+- Every time you run a function call, you will initialize a stack frame
