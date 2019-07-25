@@ -10,6 +10,7 @@ PUSH = 0b01000101
 POP = 0b01000110
 CALL = 0b01010000
 RET = 0b00010001
+ADD = 0b10100000
 
 class CPU:
     """Main CPU class."""
@@ -26,6 +27,9 @@ class CPU:
         self.branch_table[MUL] = self.handle_MUL
         self.branch_table[PUSH] = self.handle_PUSH
         self.branch_table[POP] = self.handle_POP
+        self.branch_table[CALL] = self.handle_CALL
+        self.branch_table[RET] = self.handle_RET
+        self.branch_table[ADD] = self.handle_ADD
         
     def __str__(self):
         return f"RAM: {self.ram}, REGISTER: {self.reg}, PC: {self.pc}"
@@ -99,6 +103,15 @@ class CPU:
 
     def handle_POP(self, operand_a):
         pass
+      
+    def handle_CALL(self, operand_a):
+        pass
+  
+    def handle_RET(self, operand_a):
+        pass
+      
+    def handle_ADD(self, operand_a, operand_b):
+        pass
             
     def run(self):
         """Run the CPU."""
@@ -141,7 +154,30 @@ class CPU:
                 value = self.ram[self.reg[self.SP]]
                 regnum = self.ram[self.pc + 1]
                 self.reg[regnum] = value
+                self.reg[self.SP] += 1 
+                
+            elif command == CALL:
+                # Get address of instruction right after this CALL inst
+                return_addr = self.pc + 2
+                
+                # push the return address on stack
+                self.reg[self.SP] -= 1                          # Decrement the SP
+                self.ram[self.reg[self.SP]] = return_addr       # Store that value in memory at the SP
+                
+                # set the PC to the subroutine addr
+                self.pc = self.reg[operand_a] - num_of_ops
+                # regnum = self.ram[self.pc + 1] 
+                # subroutine_addr = self.reg[regnum] 
+                # self.pc = subroutine_addr
+                
+            elif command == RET:
+                # pop the return address off the stack
+                return_addr = self.ram[self.reg[self.SP]]
                 self.reg[self.SP] += 1
+                self.pc =return_addr - 1
+                
+            elif command == ADD:
+                self.reg[operand_a] = self.reg[operand_a] + self.reg[operand_b]
                 
             else: 
                 print(f"unknown instruction: {command}")
