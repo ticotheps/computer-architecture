@@ -15,3 +15,5 @@
 # Stack Frames
 
 - Every time you run a function call, you will initialize a stack frame
+- Local variables are part of a stack frame
+- When stack frames get removed, local variables also get removed
