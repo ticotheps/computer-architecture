@@ -1,0 +1,15 @@
+LDI R1, [address of the subroutine]
+CALL R1
+HLT
+
+# subroutine
+LDI R0, 8
+PRN R0
+
+PUSH R0
+PUSH R1
+
+POP R2
+POP R3
+
+RET

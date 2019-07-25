@@ -46,6 +46,7 @@ register[SP] = 127
 
 while (running):
     command = memory[pc]
+    print(command)
     if command == PRINT_BEEJ:
         print("Beej!")
         pc += 1
