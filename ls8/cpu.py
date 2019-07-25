@@ -1,15 +1,21 @@
  # Place where instructions are processed
 """CPU functionality."""
 import sys
+
 LDI = 0b10000010
-HLT = 0b00000001
 PRN = 0b01000111
+HLT = 0b00000001
 MUL = 0b10100010
 
 class CPU:
     """Main CPU class."""
     def __init__(self):
         """Construct a new CPU."""
+        self.branch_table = {}
+        self.branch_table[LDI] = self.handle_LDI
+        self.branch_table[HLT] = self.handle_HLT
+        self.branch_table[PRN] = self.handle_PRN
+        self.branch_table[MUL] = self.handle_MUL
         self.ram = [0] * 256
         self.reg = [0] * 8
         self.pc = 0
@@ -24,6 +30,7 @@ class CPU:
     # MDR = value; _Memory Data Register_
     def ram_write(self, value, address):
         self.ram[address] = value
+        
     def load(self):
         """Load a program into memory."""
         # program = [0] * 256
@@ -48,6 +55,7 @@ class CPU:
         except FileNotFoundError:
             print(f"{sys.argv[0]}: {sys.argv[1]} not found")
             sys.exit(2)
+            
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
         if op == "ADD":
@@ -55,6 +63,7 @@ class CPU:
         #elif op == "SUB": etc
         else:
             raise Exception("Unsupported ALU operation")
+        
     def trace(self):
         """
         Handy function to print out the CPU state. You might want to call this
@@ -70,15 +79,25 @@ class CPU:
         ), end='')
         for i in range(8):
             print(" %02X" % self.reg[i], end='')
-        print()
+        # print()
+        
+    def handle_LDI(self, operand_a, operand_b):
+        pass
+    
+    def handle_PRN(self, operand_a):
+        pass
+    
+    def handle_HLT(self):
+        pass
+        
+    def handle_MUL(self, operand_a, operand_b):
+        pass
+            
     def run(self):
         """Run the CPU."""
         # determines whether or not this function is "running"
         running = True
-        
-        # IR = _Instruction Register_
-        
-        
+    
         while (running):
             IR = self.ram_read(self.pc)
             
