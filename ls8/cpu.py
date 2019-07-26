@@ -5,12 +5,16 @@ import sys
 LDI = 0b10000010
 PRN = 0b01000111
 HLT = 0b00000001
-MUL = 0b10100010
+MUL = 0b10100010    #  Handled by the ALU
 PUSH = 0b01000101
 POP = 0b01000110
 CALL = 0b01010000
 RET = 0b00010001
-ADD = 0b10100000
+ADD = 0b10100000    #  Handled by the ALU
+CMP = 0b10100111    #  Handled by the ALU
+JMP = 0b01010100    #  Sets the PC
+JEQ = 0b01010101
+JNE = 0b01010110
 
 class CPU:
     """Main CPU class."""
@@ -20,6 +24,7 @@ class CPU:
         self.reg = [0] * 8
         self.pc = 0
         self.SP = 7
+        self.fl = 0b00000000
         self.branch_table = {}
         self.branch_table[LDI] = self.handle_LDI
         self.branch_table[PRN] = self.handle_PRN
@@ -77,7 +82,7 @@ class CPU:
         """
         print(f"TRACE: %02X | %02X %02X %02X |" % (
             self.pc,
-            #self.fl,
+            self.fl,
             #self.ie,
             self.ram_read(self.pc),
             self.ram_read(self.pc + 1),
@@ -141,6 +146,7 @@ class CPU:
             elif command == HLT: 
                 running = False
                 
+            #  Handled by the ALU
             elif command == MUL:
                 self.reg[operand_a] = self.reg[operand_a] * self.reg[operand_b]
                 
@@ -161,8 +167,8 @@ class CPU:
                 return_addr = self.pc + 2
                 
                 # push the return address on stack
-                self.reg[self.SP] -= 1                          # Decrement the SP
-                self.ram[self.reg[self.SP]] = return_addr       # Store that value in memory at the SP
+                self.reg[self.SP] -= 1                      # Decrement the SP
+                self.ram[self.reg[self.SP]] = return_addr   # Store that value in memory at the SP
                 
                 # set the PC to the subroutine addr
                 self.pc = self.reg[operand_a] - num_of_ops
@@ -174,11 +180,65 @@ class CPU:
                 # pop the return address off the stack
                 return_addr = self.ram[self.reg[self.SP]]
                 self.reg[self.SP] += 1
-                self.pc =return_addr - 1
                 
+                self.pc = return_addr - 1
+            
+            #  Handled by the ALU  
             elif command == ADD:
                 self.reg[operand_a] = self.reg[operand_a] + self.reg[operand_b]
                 
+            #  Handled by the ALU
+            elif command == CMP:
+                print(f"CMP operand_A:{self.reg[operand_a]}; operand_b:{self.reg[operand_b]} ")
+                if self.reg[operand_a] == self.reg[operand_b]:
+                    e_mask = 0b01000000
+                    # possible_flags = 0b00000110, 0b00000101, 0b00000011, 0b00000111
+                    
+                    # if current_fl does not have 'E' = 1, then shift the '01' 6 spaces to the right...
+                    if (self.fl & 0b00000001 == 0b00000000):
+                        self.fl = (e_mask >> 6) & 0b01000111
+                    # if current_fl DOES have 'E' = 0, then leave it.
+                    else:
+                        pass
+                    
+                elif self.reg[operand_a] < self.reg[operand_b]:
+                    e_mask = 0b01000000
+                    # possible_flags = 0b00000110, 0b00000101, 0b00000011, 0b00000111
+                    
+                    # if current_fl does not have 'L' = 1, then shift the '01' 4 spaces to the right...
+                    if (self.fl & 0b00000001 == 0b00000000):
+                        self.fl = (e_mask >> 4) & 0b01000111
+                    # if current_fl DOES have 'L' = 0, then leave it.
+                    else:
+                        pass
+                    
+                elif self.reg[operand_a] > self.reg[operand_b]:
+                    e_mask = 0b01000000
+                    # possible_flags = 0b00000110, 0b00000101, 0b00000011, 0b00000111
+                    
+                    # if current_fl does not have 'G' = 1, then shift the '01' 5 spaces to the right...
+                    if (self.fl & 0b00000001 == 0b00000000):
+                        self.fl = (e_mask >> 5) & 0b01000111
+                    # if current_fl DOES have 'G' = 0, then leave it.
+                    else:
+                        pass   
+                    
+            elif command == JMP:
+                print("JMP")
+                self.pc = self.reg[operand_a]
+                
+            elif command == JEQ:
+                print("JEQ")
+                if self.fl == 0b00000001:
+                    self.pc = self.reg[operand_a]
+                    
+            elif command == JNE:
+                print("JNE")
+                print(command)
+                if self.fl != 0b001:
+                    self.pc = self.reg[operand_a]
+                print(command)
+
             else: 
                 print(f"unknown instruction: {command}")
                 sys.exit(1)

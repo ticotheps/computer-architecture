@@ -229,6 +229,8 @@ _This is an instruction handled by the ALU._
 
 `CMP registerA registerB`
 
+- i.e. `FL` bits: `00000LGE`
+
 Compare the values in two registers.
 
 - If they are equal, set the Equal `E` flag to 1, otherwise set it to 0.
