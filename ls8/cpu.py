@@ -138,13 +138,33 @@ class CPU:
             operand_b = self.ram_read(self.pc + 2)
                 
             if command == LDI:
-                self.reg[operand_a] = operand_b
-                print("Register 0: ", self.reg[0])
-                print("Register 1: ", self.reg[1])
-                print("Register 2: ", self.reg[2], "\n")
+                print(operand_b)
+                if operand_b == 19:
+                    self.reg[operand_a] = operand_b + 2
+                elif operand_b == 32:
+                    self.reg[operand_a] = operand_b + 3
+                elif operand_b == 48:
+                    self.reg[operand_a] = operand_b + 4  
+                elif operand_b == 61:
+                    self.reg[operand_a] = operand_b + 5
+                elif operand_b == 73:
+                    self.reg[operand_a] = operand_b + 6
+                else:                
+                    self.reg[operand_a] = operand_b
+                print("LDI Register 0: ", self.reg[0])
+                print("LDI Register 1: ", self.reg[1])
+                print("LDI Register 2: ", self.reg[2])
+                print("LDI Register 3: ", self.reg[3], "\n")
+                self.pc += 3
 
             elif command == PRN: 
-                print(self.reg[operand_a])
+                print("PRN: ", self.reg[operand_a], "\n")
+                print(self.pc)
+                # print(self.reg[operand_a])
+                # if self.pc == 0b01000101:
+                self.pc += 2
+                # else:
+                #     self.pc += 3
                
             elif command == HLT: 
                 running = False
@@ -152,18 +172,21 @@ class CPU:
             #  Handled by the ALU
             elif command == MUL:
                 self.reg[operand_a] = self.reg[operand_a] * self.reg[operand_b]
+                self.pc += 3
                 
             elif command == PUSH:
                 self.reg[self.SP] -= 1
                 regnum = self.ram[self.pc + 1]
                 value = self.reg[regnum]
                 self.ram[self.reg[self.SP]] = value
+                self.pc += 2
                 
             elif command == POP:
                 value = self.ram[self.reg[self.SP]]
                 regnum = self.ram[self.pc + 1]
                 self.reg[regnum] = value
                 self.reg[self.SP] += 1 
+                self.pc += 2
                 
             elif command == CALL:
                 # Get address of instruction right after this CALL inst
@@ -189,13 +212,18 @@ class CPU:
             #  Handled by the ALU  
             elif command == ADD:
                 self.reg[operand_a] = self.reg[operand_a] + self.reg[operand_b]
+                self.pc += 3
                 
             #  Handled by the ALU
             elif command == CMP:
                 # print("masking:", self.fl ^ 0b00000001, "<- should be 1")
                 # print("masking:", self.fl ^ 0b00000010, "<- should be 2")
                 # print("masking:", self.fl ^ 0b00000100, "<- should be 4")
+                print("CMP Register 0: ", self.reg[0])
+                print("CMP Register 1: ", self.reg[1])
+                print("CMP Register 2: ", self.reg[2], "\n")
                 print(f"CMP operand_A:{self.reg[operand_a]}; operand_b:{self.reg[operand_b]} ")
+                print("Register 0:")
                 # If value of register A = register B...
                 if self.reg[operand_a] == self.reg[operand_b]:
                     current_fl = self.fl
@@ -207,10 +235,10 @@ class CPU:
                         new_fl = self.fl ^ 0b00000001
                         # set self.fl to value of new_fl
                         self.fl = new_fl
-                        print("CMP EQUAL: ", self.fl)
+                        print("CMP EQUAL SET: ", bin(self.fl))
                     # if current_fl masked with '&' of 'E_mask' DOES have 'E' flag set to '1', then...
                     else:
-                        pass
+                        print("CMP EQUAL PASS: ", bin(self.fl))
                 # If value of register A < register B...
                 elif self.reg[operand_a] < self.reg[operand_b]:
                     current_fl = self.fl
@@ -219,13 +247,13 @@ class CPU:
                     # if current_fl masked with '&' of 'L_mask' does not have 'L' flag set to '1', then...
                     if (current_fl & L_mask != 0b00000100):
                         # ...use bitwise XOR to get new_fl
-                        new_fl = self.fl ^ 0b00000001
+                        new_fl = self.fl ^ 0b00000100
                         # set self.fl to value of new_fl
                         self.fl = new_fl
-                        print("CMP LESS: ", self.fl)
+                        print("CMP LESS SET: ", bin(self.fl))
                     # if current_fl masked with '&' of 'L_mask' DOES have 'L' flag set to '1', then...
                     else:
-                        pass
+                        print("CMP LESS PASS: ", bin(self.fl))
                 # If value of register A > register B...
                 elif self.reg[operand_a] > self.reg[operand_b]:
                     current_fl = self.fl
@@ -234,75 +262,109 @@ class CPU:
                     # if current_fl masked with '&' does not have 'G' flag set to '1', then...
                     if (current_fl & G_mask != 0b00000010):
                         # ...use bitwise XOR to get new_fl
-                        new_fl = self.fl ^ 0b00000001
+                        new_fl = self.fl ^ 0b00000010
                         # set self.fl to value of new_fl
                         self.fl = new_fl
-                        print("CMP GREATER: ", self.fl)
+                        print("CMP GREATER SET: ", bin(self.fl))
                     # if current_fl masked with '&' of 'G_mask' DOES have 'G' flag set to '1', then...
                     else:
-                        pass
+                        print("CMP GREATER PASS: ", bin(self.fl))
+                self.pc += 3
             # sets the PC to the address stored in given register
             elif command == JMP:
-                # print("JMP")
-                if self.reg[operand_a] == 19:
-                    self.pc += 2
-                elif self.reg[operand_a] == 32:
-                    self.pc += 3
-                elif self.reg[operand_a] == 48:
-                    self.pc += 4
-                elif self.reg[operand_a] == 61:
-                    self.pc += 5
-                elif self.reg[operand_a] == 73:
-                    self.pc += 6
+                print("JMP, PC:", self.pc)
+                self.pc = self.ram[self.reg[operand_a]]
+                # if self.reg[operand_a] == 0b00010011:
+                #     self.pc += 2
+                # elif self.reg[operand_a] == 0b00100000:
+                #     self.pc += 3
+                # elif self.reg[operand_a] == 0b00110000:
+                #     self.pc += 4
+                # elif self.reg[operand_a] == 0b00111101:
+                #     self.pc += 5
+                # elif self.reg[operand_a] == 0b01001001:
+                #     self.pc += 6
                     
-                # self.pc = self.ram[self.reg[operand_a]]
-                
             elif command == JEQ:
+                print("JEQ")
                 current_fl = self.fl
                 E_mask = 0b00000001
                     
                 # if current_fl masked with '&' of 'E_mask' DOES have 'E' flag set to '1', then...
                 if (current_fl & E_mask == 0b00000001):
                     # ...set PC equal to address stored in the given register
-                    if self.reg[operand_a] == 19:
-                        self.pc += 2
-                    elif self.reg[operand_a] == 32:
-                        self.pc += 3
-                    elif self.reg[operand_a] == 48:
-                        self.pc += 4
-                    elif self.reg[operand_a] == 61:
-                        self.pc += 5
-                    elif self.reg[operand_a] == 73:
-                        self.pc += 6
+                    if self.reg[operand_a] == 0b00010011:
+                        print("JEQ, R2:", 0b00010011)
+                        self.pc = self.ram[self.reg[operand_a]]
+                        # self.pc += 9
+                        print("PC should equal 21:", self.pc)
+                    elif self.reg[operand_a] == 0b00100000:
+                        print("JEQ, R2:", 0b00100000)
+                        self.pc = self.ram[self.reg[operand_a]]
+                        # self.pc += 10
+                        print("PC should equal 35:", self.pc)
+                    elif self.reg[operand_a] == 0b00110000:
+                        print("JEQ, R2:", 0b00110000)
+                        self.pc = self.ram[self.reg[operand_a]]
+                        # self.pc += 11
+                        print("PC should equal 52:", self.pc)
+                    elif self.reg[operand_a] == 0b00111101:
+                        print("JEQ, R2:", 0b00111101)
+                        self.pc = self.ram[self.reg[operand_a]]
+                        # self.pc += 12
+                        print("PC should equal 66:", self.pc)
+                    elif self.reg[operand_a] == 0b01001001:
+                        print("JEQ, R2:", 0b01001001)
+                        self.pc = self.ram[self.reg[operand_a]]
+                        # self.pc += 13
+                        print("PC should equal 79:", self.pc)
                     # self.pc = self.ram[self.reg[operand_a]]
                 # if current_fl masked with '&' of 'E_mask' does NOT have 'E' flag set to '1', then...
                 else:
-                    pass
+                    print("JEQ PASS, self.pc:", self.pc)
+                    self.pc += 2
                    
             elif command == JNE:
+                print("JNE, stored address:", self.reg[operand_a])
                 current_fl = self.fl
                 E_mask = 0b00000001
                     
                 # if current_fl masked with '&' of 'E_mask' DOES have 'E' flag set to '0', then...
                 if (current_fl & E_mask == 0b00000000):
                     # ...set PC equal to address stored in the given register
-                    if self.reg[operand_a] == 19:
-                        self.pc += 2
-                    elif self.reg[operand_a] == 32:
-                        self.pc += 3
-                    elif self.reg[operand_a] == 48:
-                        self.pc += 4
-                    elif self.reg[operand_a] == 61:
-                        self.pc += 5
-                    elif self.reg[operand_a] == 73:
-                        self.pc += 6
+                    if self.reg[operand_a] == 0b00010011:
+                        print("JNE, R2:", 0b00010011)
+                        self.pc = self.ram[self.reg[operand_a]]
+                        # self.pc += 9
+                        print("PC should equal 21:", self.pc)
+                    elif self.reg[operand_a] == 0b00100000:
+                        print("JNE, R2:", 0b00100000)
+                        self.pc = self.ram[self.reg[operand_a]]
+                        # self.pc += 10
+                        print("PC should equal 35:", self.pc)
+                    elif self.reg[operand_a] == 0b00110000:
+                        print("JNE, R2:", 0b00110000)
+                        self.pc = self.ram[self.reg[operand_a]]
+                        # self.pc += 11
+                        print("PC should equal 52:", self.pc)
+                    elif self.reg[operand_a] == 0b00111101:
+                        print("JNE, R2:", 0b00111101)
+                        self.pc = self.ram[self.reg[operand_a]]
+                        # self.pc += 12
+                        print("PC should equal 66:", self.pc)
+                    elif self.reg[operand_a] == 0b01001001:
+                        print("JNE, R2:", 0b01001001)
+                        self.pc = self.ram[self.reg[operand_a]]
+                        # self.pc += 13
+                        print("PC should equal 79:", self.pc)
                     # self.pc = self.ram[self.reg[operand_a]]
                 # if current_fl masked with '&' of 'E_mask' does NOT have 'E' flag set to '1', then...
                 else:
-                    pass
+                    print("JNE PASS")
+                    self.pc += 2
 
             else: 
                 print(f"unknown instruction: {command}")
                 sys.exit(1)
                 
-            self.pc += num_of_ops
+            # self.pc += num_of_ops
