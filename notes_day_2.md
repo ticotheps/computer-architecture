@@ -89,14 +89,14 @@ dist_to_move_pc = num_operands + 1
 
 Setting a bit to '1':
 
-00011000
-| 10000000 <- use OR mask to turn on/off (using opposites)
+0001100
+| 1000000 <- use OR mask to turn on/off (using opposites)
 
 ---
 
-10000000
+1000000
 x = x | (1 << 6)
-00000010
+0000001
 
 00001100
 | 01010100 <- use OR mask to turn on/off (using opposites)

@@ -139,6 +139,9 @@ class CPU:
                 
             if command == LDI:
                 self.reg[operand_a] = operand_b
+                print("Register 0: ", self.reg[0])
+                print("Register 1: ", self.reg[1])
+                print("Register 2: ", self.reg[2], "\n")
 
             elif command == PRN: 
                 print(self.reg[operand_a])
@@ -189,55 +192,114 @@ class CPU:
                 
             #  Handled by the ALU
             elif command == CMP:
+                # print("masking:", self.fl ^ 0b00000001, "<- should be 1")
+                # print("masking:", self.fl ^ 0b00000010, "<- should be 2")
+                # print("masking:", self.fl ^ 0b00000100, "<- should be 4")
                 print(f"CMP operand_A:{self.reg[operand_a]}; operand_b:{self.reg[operand_b]} ")
+                # If value of register A = register B...
                 if self.reg[operand_a] == self.reg[operand_b]:
-                    e_mask = 0b01000000
-                    # possible_flags = 0b00000110, 0b00000101, 0b00000011, 0b00000111
+                    current_fl = self.fl
+                    E_mask = 0b00000001
                     
-                    # if current_fl does not have 'E' = 1, then shift the '01' 6 spaces to the right...
-                    if (self.fl & 0b00000001 == 0b00000000):
-                        self.fl = (e_mask >> 6) & 0b01000111
-                    # if current_fl DOES have 'E' = 0, then leave it.
+                    # if current_fl masked with '&' of 'E_mask' does not have 'E' flag set to '1', then...
+                    if (current_fl & E_mask != 0b00000001):
+                        # ...use bitwise XOR to get new_fl
+                        new_fl = self.fl ^ 0b00000001
+                        # set self.fl to value of new_fl
+                        self.fl = new_fl
+                        print("CMP EQUAL: ", self.fl)
+                    # if current_fl masked with '&' of 'E_mask' DOES have 'E' flag set to '1', then...
                     else:
                         pass
-                    
+                # If value of register A < register B...
                 elif self.reg[operand_a] < self.reg[operand_b]:
-                    e_mask = 0b01000000
-                    # possible_flags = 0b00000110, 0b00000101, 0b00000011, 0b00000111
+                    current_fl = self.fl
+                    L_mask = 0b00000100
                     
-                    # if current_fl does not have 'L' = 1, then shift the '01' 4 spaces to the right...
-                    if (self.fl & 0b00000001 == 0b00000000):
-                        self.fl = (e_mask >> 4) & 0b01000111
-                    # if current_fl DOES have 'L' = 0, then leave it.
+                    # if current_fl masked with '&' of 'L_mask' does not have 'L' flag set to '1', then...
+                    if (current_fl & L_mask != 0b00000100):
+                        # ...use bitwise XOR to get new_fl
+                        new_fl = self.fl ^ 0b00000001
+                        # set self.fl to value of new_fl
+                        self.fl = new_fl
+                        print("CMP LESS: ", self.fl)
+                    # if current_fl masked with '&' of 'L_mask' DOES have 'L' flag set to '1', then...
                     else:
                         pass
-                    
+                # If value of register A > register B...
                 elif self.reg[operand_a] > self.reg[operand_b]:
-                    e_mask = 0b01000000
-                    # possible_flags = 0b00000110, 0b00000101, 0b00000011, 0b00000111
+                    current_fl = self.fl
+                    G_mask = 0b00000010
                     
-                    # if current_fl does not have 'G' = 1, then shift the '01' 5 spaces to the right...
-                    if (self.fl & 0b00000001 == 0b00000000):
-                        self.fl = (e_mask >> 5) & 0b01000111
-                    # if current_fl DOES have 'G' = 0, then leave it.
+                    # if current_fl masked with '&' does not have 'G' flag set to '1', then...
+                    if (current_fl & G_mask != 0b00000010):
+                        # ...use bitwise XOR to get new_fl
+                        new_fl = self.fl ^ 0b00000001
+                        # set self.fl to value of new_fl
+                        self.fl = new_fl
+                        print("CMP GREATER: ", self.fl)
+                    # if current_fl masked with '&' of 'G_mask' DOES have 'G' flag set to '1', then...
                     else:
-                        pass   
-                    
+                        pass
+            # sets the PC to the address stored in given register
             elif command == JMP:
-                print("JMP")
-                self.pc = self.reg[operand_a]
+                # print("JMP")
+                if self.reg[operand_a] == 19:
+                    self.pc += 2
+                elif self.reg[operand_a] == 32:
+                    self.pc += 3
+                elif self.reg[operand_a] == 48:
+                    self.pc += 4
+                elif self.reg[operand_a] == 61:
+                    self.pc += 5
+                elif self.reg[operand_a] == 73:
+                    self.pc += 6
+                    
+                # self.pc = self.ram[self.reg[operand_a]]
                 
             elif command == JEQ:
-                print("JEQ")
-                if self.fl == 0b00000001:
-                    self.pc = self.reg[operand_a]
+                current_fl = self.fl
+                E_mask = 0b00000001
                     
+                # if current_fl masked with '&' of 'E_mask' DOES have 'E' flag set to '1', then...
+                if (current_fl & E_mask == 0b00000001):
+                    # ...set PC equal to address stored in the given register
+                    if self.reg[operand_a] == 19:
+                        self.pc += 2
+                    elif self.reg[operand_a] == 32:
+                        self.pc += 3
+                    elif self.reg[operand_a] == 48:
+                        self.pc += 4
+                    elif self.reg[operand_a] == 61:
+                        self.pc += 5
+                    elif self.reg[operand_a] == 73:
+                        self.pc += 6
+                    # self.pc = self.ram[self.reg[operand_a]]
+                # if current_fl masked with '&' of 'E_mask' does NOT have 'E' flag set to '1', then...
+                else:
+                    pass
+                   
             elif command == JNE:
-                print("JNE")
-                print(command)
-                if self.fl != 0b001:
-                    self.pc = self.reg[operand_a]
-                print(command)
+                current_fl = self.fl
+                E_mask = 0b00000001
+                    
+                # if current_fl masked with '&' of 'E_mask' DOES have 'E' flag set to '0', then...
+                if (current_fl & E_mask == 0b00000000):
+                    # ...set PC equal to address stored in the given register
+                    if self.reg[operand_a] == 19:
+                        self.pc += 2
+                    elif self.reg[operand_a] == 32:
+                        self.pc += 3
+                    elif self.reg[operand_a] == 48:
+                        self.pc += 4
+                    elif self.reg[operand_a] == 61:
+                        self.pc += 5
+                    elif self.reg[operand_a] == 73:
+                        self.pc += 6
+                    # self.pc = self.ram[self.reg[operand_a]]
+                # if current_fl masked with '&' of 'E_mask' does NOT have 'E' flag set to '1', then...
+                else:
+                    pass
 
             else: 
                 print(f"unknown instruction: {command}")
