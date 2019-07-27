@@ -271,18 +271,18 @@ class CPU:
                 E_mask = 0b00000001
                     
                 # if current_fl masked with '&' of 'E_mask' DOES have 'E' flag set to '0', then...
-                if (current_fl & E_mask == 0b00000000):
+                if (current_fl & E_mask != 0b00000001):
                     # ...set PC equal to address stored in the given register
-                    if self.reg[operand_a] == 19:
-                        self.pc += 2
-                    elif self.reg[operand_a] == 32:
-                        self.pc += 3
-                    elif self.reg[operand_a] == 48:
-                        self.pc += 4
+                    if self.reg[operand_a] == 0b00010011: # 19
+                        self.pc = self.ram[self.reg[operand_a] + 1]
+                    elif self.reg[operand_a] == 0b00100000: # 32
+                        self.pc = self.ram[self.reg[operand_a] + 2]
+                    elif self.reg[operand_a] == 0b00110000: # 48
+                        self.pc = self.ram[self.reg[operand_a] + 3]
                     elif self.reg[operand_a] == 61:
-                        self.pc += 5
+                        self.pc = self.ram[self.reg[operand_a] + 4]
                     elif self.reg[operand_a] == 73:
-                        self.pc += 6
+                        self.pc = self.ram[self.reg[operand_a] + 5]
                     # self.pc = self.ram[self.reg[operand_a]]
                 # if current_fl masked with '&' of 'E_mask' does NOT have 'E' flag set to '1', then...
                 else:
