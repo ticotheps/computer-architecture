@@ -111,7 +111,7 @@ class CPU:
                 
             elif command == PRN: 
                 print("PRN, ~PC~:", int(self.pc) + 1)
-                print("*--PRINT--*: ", self.reg[operand_a])
+                print("*----------PRINT----------*: ", self.reg[operand_a])
                 self.pc += 2
                 print("PRN, ~PC~:", int(self.pc) + 1, "\n")
                
@@ -265,24 +265,40 @@ class CPU:
                 self.pc += 2
                    
             elif command == JNE:
-                print("JNE, ~PC~:", int(self.pc) + 2)
+                print("JNE, ~PC~:", int(self.pc) + 1)
                 current_fl = self.fl
-                print("JNE, FLAG:", bin(current_fl), "\n")
+                print("JNE, FLAG:", bin(current_fl))
                 E_mask = 0b00000001
                     
                 # if current_fl masked with '&' of 'E_mask' DOES have 'E' flag set to '0', then...
                 if (current_fl & E_mask != 0b00000001):
                     # ...set PC equal to address stored in the given register
                     if self.reg[operand_a] == 0b00010011: # 19
-                        self.pc = self.ram[self.reg[operand_a] + 1]
+                        print("JNE: JUMPED to TEST 1!!, FLAG:", bin(current_fl))
+                        print("R2:", self.reg[2])
+                        self.pc = self.reg[operand_a] + 2
+                        
                     elif self.reg[operand_a] == 0b00100000: # 32
-                        self.pc = self.ram[self.reg[operand_a] + 2]
+                        print("JNE: JUMPED to TEST 2!!, FLAG:", bin(current_fl))
+                        print("R2:", self.reg[2])
+                        self.pc = self.reg[operand_a] + 3
+                        
                     elif self.reg[operand_a] == 0b00110000: # 48
-                        self.pc = self.ram[self.reg[operand_a] + 3]
-                    elif self.reg[operand_a] == 61:
-                        self.pc = self.ram[self.reg[operand_a] + 4]
-                    elif self.reg[operand_a] == 73:
-                        self.pc = self.ram[self.reg[operand_a] + 5]
+                        print("JNE: JUMPED to TEST 3!!, FLAG:", bin(current_fl))
+                        print("R2:", self.reg[2])
+                        self.pc = self.reg[operand_a] + 4
+                        
+                    elif self.reg[operand_a] == 0b00111101: # 61
+                        print("JNE: JUMPED to TEST 4!!, FLAG:", bin(current_fl))
+                        print("R2:", self.reg[2])
+                        self.pc = self.reg[operand_a] + 5
+                        
+                    elif self.reg[operand_a] == 0b01001001: # 73
+                        print("JNE: JUMPED to TEST 5!!, FLAG:", bin(current_fl))
+                        print("R2:", self.reg[2])
+                        self.pc = self.reg[operand_a] + 6
+                        
+                    print("JNE, ~PC~:", int(self.pc) + 1, "\n")
                     # self.pc = self.ram[self.reg[operand_a]]
                 # if current_fl masked with '&' of 'E_mask' does NOT have 'E' flag set to '1', then...
                 else:
