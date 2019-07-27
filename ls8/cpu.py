@@ -106,7 +106,7 @@ class CPU:
                 
                 if operand_a == 0b00000000:
                     self.reg[operand_a] = operand_b
-                    print("LDI, R0 changed to:", self.reg[0])
+                    print("LDI, R0: ***", self.reg[0], "***")
                     print("LDI, R1:", self.reg[1])
                     print("LDI, R2:", self.reg[2])
                     print("LDI, R3:", self.reg[3], "\n")
@@ -114,7 +114,7 @@ class CPU:
                 elif operand_a == 0b00000001:
                     self.reg[operand_a] = operand_b
                     print("LDI, R0:", self.reg[0])
-                    print("LDI, R1 changed to:", self.reg[1])
+                    print("LDI, R1: ***", self.reg[1], "***")
                     print("LDI, R2:", self.reg[2])
                     print("LDI, R3:", self.reg[3], "\n")
 
@@ -122,7 +122,7 @@ class CPU:
                     self.reg[operand_a] = operand_b
                     print("LDI, R0:", self.reg[0])
                     print("LDI, R1:", self.reg[1])
-                    print("LDI, R2 changed to:", self.reg[2])
+                    print("LDI, R2: ***", self.reg[2], "***")
                     print("LDI, R3:", self.reg[3], "\n")
 
                 elif operand_a == 0b00000011:
@@ -130,10 +130,10 @@ class CPU:
                     print("LDI, R0:", self.reg[0])
                     print("LDI, R1:", self.reg[1])
                     print("LDI, R2:", self.reg[2])
-                    print("LDI, R3 changed to:", self.reg[3], "\n")
+                    print("LDI, R3: ***", self.reg[3], "***\n")
 
                 else:
-                    print("LDI, unknown register")
+                    print("LDI, unknown register \n")
                 self.pc += 3
                 
             elif command == PRN: 
@@ -200,7 +200,7 @@ class CPU:
             #  Handled by the ALU
             elif command == CMP:
                 print("CMP, ~PC~:", int(self.pc) + 1)
-                print(f"CMP op_a:{self.reg[operand_a]}; op_b:{self.reg[operand_b]} ")
+                print(f"CMP, op_a:{self.reg[operand_a]} vs op_b:{self.reg[operand_b]} ")
                 # If value of register A = register B...
                 if self.reg[operand_a] == self.reg[operand_b]:
                     print("CMP, op_a EQUAL TO op_b")
@@ -253,18 +253,8 @@ class CPU:
             # sets the PC to the address stored in given register
             elif command == JMP:
                 print("JMP, ~PC~:", int(self.pc) + 1, "\n")
-                if self.reg[operand_a] == 19:
-                    self.pc += 2
-                elif self.reg[operand_a] == 32:
-                    self.pc += 3
-                elif self.reg[operand_a] == 48:
-                    self.pc += 4
-                elif self.reg[operand_a] == 61:
-                    self.pc += 5
-                elif self.reg[operand_a] == 73:
-                    self.pc += 6
-                    
-                # self.pc = self.ram[self.reg[operand_a]]
+                self.pc = self.reg[operand_a]
+                print("JUMPED!!! ~PC~:", int(self.pc) + 1, "\n")
                 
             elif command == JEQ:
                 print("JEQ, ~PC~:", int(self.pc) + 1)
@@ -277,34 +267,34 @@ class CPU:
                     if self.reg[operand_a] == 0b00010011: # 19
                         print("JEQ: E FLAG = TRUE =", bin(current_fl), "= JUMPED to TEST 1!")
                         print("R2:", self.reg[2])
-                        self.pc = self.reg[operand_a] + 1
+                        self.pc = self.reg[operand_a]
                         
                     elif self.reg[operand_a] == 0b00100000: # 32
                         print("JEQ: E FLAG = TRUE =", bin(current_fl), "= JUMPED to TEST 2!")
                         print("R2:", self.reg[2])
-                        self.pc = self.reg[operand_a] + 2
+                        self.pc = self.reg[operand_a]
                         
                     elif self.reg[operand_a] == 0b00110000: # 48
                         print("JEQ: E FLAG = TRUE =", bin(current_fl), "= JUMPED to TEST 3!")
                         print("R2:", self.reg[2])
-                        self.pc = self.reg[operand_a] + 3
+                        self.pc = self.reg[operand_a]
                         
                     elif self.reg[operand_a] == 0b00111101: # 61
                         print("JEQ: E FLAG = TRUE =", bin(current_fl), "= JUMPED to TEST 4!")
                         print("R2:", self.reg[2])
-                        self.pc = self.reg[operand_a] + 4
+                        self.pc = self.reg[operand_a]
                         
                     elif self.reg[operand_a] == 0b01001001: # 73
                         print("JEQ: E FLAG = TRUE =", bin(current_fl), "= JUMPED to TEST 5!")
                         print("R2:", self.reg[2])
-                        self.pc = self.reg[operand_a] + 5
+                        self.pc = self.reg[operand_a]
                         
                     print("JEQ, ~PC~:", int(self.pc) + 1, "\n")
                     # self.pc = self.ram[self.reg[operand_a]]
                 # if current_fl masked with '&' of 'E_mask' does NOT have 'E' flag set to '1', then...
                 else:
                     self.pc += 2
-                    print("JEQ: E FLAG = FALSE =", bin(current_fl), "= NO JUMP, PC:", int(self.pc) + 1, "\n")
+                    print("JEQ: E FLAG = FALSE =", bin(current_fl), "= NO JUMP, ~PC~:", int(self.pc) + 1, "\n")
 
                    
             elif command == JNE:
