@@ -57,11 +57,64 @@ class CPU:
             print(f"{sys.argv[0]}: {sys.argv[1]} not found")
             sys.exit(2)
             
-    def alu(self, op, reg_a, reg_b):
+    def alu(self, op, operand_a, operand_b):
         """ALU operations."""
         if op == "ADD":
-            self.reg[reg_a] += self.reg[reg_b]
-        #elif op == "SUB": etc
+            self.reg[operand_a] = self.reg[operand_a] + self.reg[operand_b]
+            self.pc += 3
+        elif op == "CMP":
+            # print("CMP, ~PC~: Line", int(self.pc) + 1)
+            print(f"CMP, op_a: {self.reg[operand_a]}  vs.  op_b: {self.reg[operand_b]}")
+            # If value of register A = register B...
+            if self.reg[operand_a] == self.reg[operand_b]:
+                print("CMP, op_a EQUAL TO op_b")
+                current_fl = self.fl
+                E_mask = 0b00000001
+                
+                # if current_fl masked with '&' of 'E_mask' does not have 'E' flag set to '1', then...
+                if (current_fl & E_mask != 0b00000001):
+                    # ...use bitwise XOR to get new_fl
+                    new_fl = self.fl ^ 0b00000001
+                    # set self.fl to value of new_fl
+                    self.fl = new_fl
+                    print("CMP, E FLAG changed:", bin(self.fl), "\n")
+                # if current_fl masked with '&' of 'E_mask' DOES have 'E' flag set to '1', then...
+                else:
+                    print("CMP, E FLAG already changed:", bin(self.fl), "\n")
+            # If value of register A < register B...
+            elif self.reg[operand_a] < self.reg[operand_b]:
+                print("CMP, op_a LESS THAN op_b")
+                current_fl = self.fl
+                L_mask = 0b00000100
+                
+                # if current_fl masked with '&' of 'L_mask' does not have 'L' flag set to '1', then...
+                if (current_fl & L_mask != 0b00000100):
+                    # ...use bitwise XOR to get new_fl
+                    new_fl = self.fl ^ 0b00000100
+                    # set self.fl to value of new_fl
+                    self.fl = new_fl
+                    print("CMP, L FLAG changed:", bin(self.fl), "\n")
+                # if current_fl masked with '&' of 'L_mask' DOES have 'L' flag set to '1', then...
+                else:
+                    print("CMP, L FLAG already changed:", bin(self.fl), "\n")
+            # If value of register A > register B...
+            elif self.reg[operand_a] > self.reg[operand_b]:
+                print("CMP, op_a GREATER THAN op_b")
+                current_fl = self.fl
+                G_mask = 0b00000010
+                
+                # if current_fl masked with '&' does not have 'G' flag set to '1', then...
+                if (current_fl & G_mask != 0b00000010):
+                    # ...use bitwise XOR to get new_fl
+                    new_fl = self.fl ^ 0b00000010
+                    # set self.fl to value of new_fl
+                    self.fl = new_fl
+                    print("CMP, G FLAG changed:", bin(self.fl), "\n")
+                # if current_fl masked with '&' of 'G_mask' DOES have 'G' flag set to '1', then...
+                else:
+                    print("CMP, G FLAG already changed:", bin(self.fl), "\n")
+            self.pc += 3
+            
         else:
             raise Exception("Unsupported ALU operation")
           
@@ -194,63 +247,11 @@ class CPU:
             
             #  Handled by the ALU  
             elif command == ADD:
-                # print("ADD, ~PC~: Line", int(self.pc) + 1, "\n")
-                self.reg[operand_a] = self.reg[operand_a] + self.reg[operand_b]
-                self.pc += 3
+                self.alu("ADD", operand_a, operand_b)
                 
             #  Handled by the ALU
             elif command == CMP:
-                # print("CMP, ~PC~: Line", int(self.pc) + 1)
-                print(f"CMP, op_a: {self.reg[operand_a]}  vs.  op_b: {self.reg[operand_b]}")
-                # If value of register A = register B...
-                if self.reg[operand_a] == self.reg[operand_b]:
-                    print("CMP, op_a EQUAL TO op_b")
-                    current_fl = self.fl
-                    E_mask = 0b00000001
-                    
-                    # if current_fl masked with '&' of 'E_mask' does not have 'E' flag set to '1', then...
-                    if (current_fl & E_mask != 0b00000001):
-                        # ...use bitwise XOR to get new_fl
-                        new_fl = self.fl ^ 0b00000001
-                        # set self.fl to value of new_fl
-                        self.fl = new_fl
-                        print("CMP, E FLAG changed:", bin(self.fl), "\n")
-                    # if current_fl masked with '&' of 'E_mask' DOES have 'E' flag set to '1', then...
-                    else:
-                        print("CMP, E FLAG already changed:", bin(self.fl), "\n")
-                # If value of register A < register B...
-                elif self.reg[operand_a] < self.reg[operand_b]:
-                    print("CMP, op_a LESS THAN op_b")
-                    current_fl = self.fl
-                    L_mask = 0b00000100
-                    
-                    # if current_fl masked with '&' of 'L_mask' does not have 'L' flag set to '1', then...
-                    if (current_fl & L_mask != 0b00000100):
-                        # ...use bitwise XOR to get new_fl
-                        new_fl = self.fl ^ 0b00000100
-                        # set self.fl to value of new_fl
-                        self.fl = new_fl
-                        print("CMP, L FLAG changed:", bin(self.fl), "\n")
-                    # if current_fl masked with '&' of 'L_mask' DOES have 'L' flag set to '1', then...
-                    else:
-                        print("CMP, L FLAG already changed:", bin(self.fl), "\n")
-                # If value of register A > register B...
-                elif self.reg[operand_a] > self.reg[operand_b]:
-                    print("CMP, op_a GREATER THAN op_b")
-                    current_fl = self.fl
-                    G_mask = 0b00000010
-                    
-                    # if current_fl masked with '&' does not have 'G' flag set to '1', then...
-                    if (current_fl & G_mask != 0b00000010):
-                        # ...use bitwise XOR to get new_fl
-                        new_fl = self.fl ^ 0b00000010
-                        # set self.fl to value of new_fl
-                        self.fl = new_fl
-                        print("CMP, G FLAG changed:", bin(self.fl), "\n")
-                    # if current_fl masked with '&' of 'G_mask' DOES have 'G' flag set to '1', then...
-                    else:
-                        print("CMP, G FLAG already changed:", bin(self.fl), "\n")
-                self.pc += 3
+                self.alu("CMP", operand_a, operand_b)
                 
             # sets the PC to the address stored in given register
             elif command == JMP:
@@ -267,29 +268,30 @@ class CPU:
                 if (current_fl & E_mask != 0b00000000):
                     # ...set PC equal to address stored in the given register
                     if self.reg[operand_a] == 0b00010011: # 19
-                        print("JEQ: E FLAG = TRUE =", bin(current_fl), "= JUMPED to TEST 1!")
+                        print("JEQ: E FLAG = TRUE =", bin(current_fl), "= JUMPED to TEST 1! \n")
                         # print("JEQ, R2:", self.reg[2])
-                        self.pc = self.reg[operand_a]
+                        # self.pc = self.reg[operand_a]
                         
                     elif self.reg[operand_a] == 0b00100000: # 32
                         print("JEQ: E FLAG = TRUE =", bin(current_fl), "= JUMPED to TEST 2! \n")
                         # print("JEQ, R2:", self.reg[2])
-                        self.pc = self.reg[operand_a]
+                        # self.pc = self.reg[operand_a]
                         
                     elif self.reg[operand_a] == 0b00110000: # 48
                         print("JEQ: E FLAG = TRUE =", bin(current_fl), "= JUMPED to TEST 3! \n")
                         # print("JEQ, R2:", self.reg[2])
-                        self.pc = self.reg[operand_a]
+                        # self.pc = self.reg[operand_a]
                         
                     elif self.reg[operand_a] == 0b00111101: # 61
                         print("JEQ: E FLAG = TRUE =", bin(current_fl), "= JUMPED to TEST 4! \n")
                         # print("JEQ, R2:", self.reg[2])
-                        self.pc = self.reg[operand_a]
+                        # self.pc = self.reg[operand_a]
                         
                     elif self.reg[operand_a] == 0b01001001: # 73
                         print("JEQ: E FLAG = TRUE =", bin(current_fl), "= JUMPED to TEST 5! \n")
                         # print("JEQ, R2:", self.reg[2])
-                        self.pc = self.reg[operand_a]
+                    
+                    self.pc = self.reg[operand_a]
                         
                     # print("JEQ, ~PC~: Line", int(self.pc) + 1, "\n")
                     # self.pc = self.ram[self.reg[operand_a]]
