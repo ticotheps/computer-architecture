@@ -89,7 +89,7 @@ class CPU:
         # SP pointing at 244 in RAM
         self.reg[self.SP] = 244
       
-        print("------------------------START OF PROGRAM-------------------------")
+        print("\n***------------------------START OF TICO'S PROGRAM-------------------------***")
         while (running):
           	# IR = _Instruction Register_
             # IR = self.ram_read(self.pc)
@@ -138,7 +138,7 @@ class CPU:
                 
             elif command == PRN: 
                 print("PRN, ~PC~:", int(self.pc) + 1)
-                print("*----------PRINT----------*: ", self.reg[operand_a])
+                print("\n*----------PRN---------->", self.reg[operand_a], "<----------PRN----------*\n")
                 self.pc += 2
                 print("PRN, ~PC~:", int(self.pc) + 1, "\n")
                
