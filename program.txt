@@ -1,0 +1,6 @@
+4      # SAVE_REGISTER 77,2
+99     # store 77
+2      # in register 2
+5      # PRINT_REGISTER 2
+2      # Print value in register 2
+2      # HALT
