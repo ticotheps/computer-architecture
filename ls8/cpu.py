@@ -62,6 +62,10 @@ class CPU:
         if op == "ADD":
             self.reg[operand_a] = self.reg[operand_a] + self.reg[operand_b]
             self.pc += 3
+        elif op == "MUL":
+            # print("MUL, ~PC~: Line", int(self.pc) + 1, "\n")
+            self.reg[operand_a] = self.reg[operand_a] * self.reg[operand_b]
+            self.pc += 3
         elif op == "CMP":
             # print("CMP, ~PC~: Line", int(self.pc) + 1)
             print(f"CMP, op_a: {self.reg[operand_a]}  vs.  op_b: {self.reg[operand_b]}")
@@ -202,9 +206,7 @@ class CPU:
                 
             #  Handled by the ALU
             elif command == MUL:
-                # print("MUL, ~PC~: Line", int(self.pc) + 1, "\n")
-                self.reg[operand_a] = self.reg[operand_a] * self.reg[operand_b]
-                self.pc += 3
+                self.alu("MUL", operand_a, operand_b)
                 
             elif command == PUSH:
                 # print("PUSH, ~PC~: Line", int(self.pc) + 1, "\n")
